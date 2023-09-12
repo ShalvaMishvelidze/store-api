@@ -80,9 +80,36 @@ const getProduct = async (req, res) => {
   res.status(200).json({ product });
 };
 
+const updateProduct = async (req, res) => {
+  const { id: productId } = req.params;
+  const product = await Product.findOneAndUpdate({ _id: productId }, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!product) {
+    throw Error(`No product with id: ${productId}`);
+  }
+
+  res.status(200).json({ product });
+};
+
+const deleteProduct = async (req, res) => {
+  const { id: productId } = req.params;
+  const product = await Product.findOneAndDelete({ _id: productId });
+
+  if (!product) {
+    throw Error(`No product with id: ${productId}`);
+  }
+
+  res.status(200).json({ product });
+};
+
 module.exports = {
   getAllProducts,
   getAllProductsStatic,
   createProduct,
   getProduct,
+  deleteProduct,
+  updateProduct,
 };
