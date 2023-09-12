@@ -5,6 +5,8 @@ const express = require('express');
 const app = express();
 const notFound = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
+const connectDB = require('./db/connect');
+const productsRouter = require('./routes/products');
 
 // middleware
 app.use(express.json());
@@ -15,6 +17,7 @@ app.get('/', (req, res) => {
 });
 
 // products route
+app.use('/api/v1/products', productsRouter);
 
 // middleware for errors and unknown routes
 app.use(notFound);
@@ -25,9 +28,11 @@ const port = process.env.PORT || 3000;
 
 const start = async () => {
   try {
-    // connectDB
+    await connectDB(process.env.MONGO_URI);
     app.listen(port, console.log(`Server is listening on prot ${port}...`));
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 start();
