@@ -69,8 +69,20 @@ const createProduct = async (req, res) => {
   res.status(201).json({ product });
 };
 
+const getProduct = async (req, res) => {
+  const { id: productId } = req.params;
+  const product = await Product.findOne({ _id: productId });
+
+  if (!product) {
+    throw Error(`No product with id: ${productId}`);
+  }
+
+  res.status(200).json({ product });
+};
+
 module.exports = {
   getAllProducts,
   getAllProductsStatic,
   createProduct,
+  getProduct,
 };
